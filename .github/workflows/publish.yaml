@@ -24,13 +24,13 @@ jobs:
     
     - run: flutter build macos
 
-    - run: ls -la build/macos/Build/Products/Release
+    - run: zip -r build/macos/Build/Products/Release/stash_app.app.zip build/macos/Build/Products/Release/stash_app.app
 
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
-        file: build/macos/Build/Products/Release/stash_app.app
+        file: build/macos/Build/Products/Release/stash_app.app.zip
         asset_name: stash-admin-macos.app
         tag: 'latest-macos'
         overwrite: true
