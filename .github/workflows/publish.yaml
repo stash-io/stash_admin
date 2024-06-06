@@ -31,7 +31,7 @@ jobs:
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: build/macos/Build/Products/Release/stash_app.app.zip
-        asset_name: stash-admin-macos.app
+        asset_name: stash-admin-macos.zip
         tag: 'latest-macos'
         overwrite: true
         body: "Automatic release"
