@@ -24,6 +24,8 @@ jobs:
     
     - run: flutter build macos
 
+    - run: ls -la build/macos/Build/Products/Release
+
     - name: Upload binaries to release
       uses: svenstaro/upload-release-action@v2
       with:
