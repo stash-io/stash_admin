@@ -100,9 +100,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: ShadImage.square(size: 16, LucideIcons.lock),
                   ),
                   validator: (v) {
-                    if (v.length < 8) {
-                      return 'La contraseña debe tener al menos 8 caracteres.';
-                    }
                     return null;
                   },
                   suffix: ShadButton(

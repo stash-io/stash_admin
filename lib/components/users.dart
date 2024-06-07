@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shadcn_ui/shadcn_ui.dart';
 import 'package:stash_app/main.dart';
 import 'package:stash_app/services/collections.dart';
+import 'package:stash_app/services/users.dart';
 import 'package:stash_app/store.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -19,11 +20,14 @@ class Users extends StatefulWidget {
 
 class _UsersState extends State<Users> {
   Future<List<User>> fetchData() async {
-    return [User(0, "Victor", "vgarciaf@hey.com", "")];
+    final user = context.get<Signal<User?>>();
+    return await usersList(user.value!.token);
   }
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = context.get<Signal<User?>>();
+
     return FutureBuilder(
       future: fetchData(),
       builder: (context, snapshot) {
@@ -135,116 +139,61 @@ class _UsersState extends State<Users> {
                   child: ShadCard(
                     title: Text(user.username),
                     description: Text(user.email),
-                    content: const Column(
+                    content: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 8),
-                        Text(
+                        const Text(
                           "Rol: Admin",
                           textAlign: TextAlign.left,
                         ),
                         SizedBox(height: 8),
                         Row(
                           children: [
-                            ShadButton.outline(
-                              text: const Text('Banear'),
+                            const ShadButton.outline(
+                              text: Text('Banear'),
                             ),
                             const SizedBox(width: 8),
                             ShadButton.destructive(
-                              text: const Text('Borrar'),
+                              text: const Text("Borrar"),
+                              onPressed: () => showShadDialog(
+                                context: context,
+                                builder: (context) => ShadDialog.alert(
+                                  title: const Text(
+                                    '¿Estas seguro?',
+                                    textAlign: TextAlign.left,
+                                  ),
+                                  description: const Padding(
+                                    padding: EdgeInsets.only(bottom: 8),
+                                    child: Text(
+                                      'Esta acción es irreversible. ¿Estás seguro de que quieres eliminar este user?',
+                                      textAlign: TextAlign.left,
+                                    ),
+                                  ),
+                                  actions: [
+                                    ShadButton.ghost(
+                                      text: const Text('Cancelar'),
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(false),
+                                    ),
+                                    ShadButton.destructive(
+                                      text: const Text('Eliminar'),
+                                      onPressed: () {
+                                        usersDelete(
+                                            currentUser.value!.token, user.id);
+                                        Navigator.of(context).pop(true);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ],
                         ),
                       ],
                     ),
                   ),
-                  onLongPress: () {
-                    showShadDialog(
-                      context: context,
-                      builder: (context) => ShadDialog(
-                        title: const Text(
-                            textAlign: TextAlign.left, 'Editar user'),
-                        description: const Text(
-                            textAlign: TextAlign.left,
-                            "Aqui puedes editar el user o borrarlo."),
-                        content: Container(
-                          width: 375,
-                          padding: const EdgeInsets.symmetric(vertical: 20),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              ShadForm(
-                                child: Column(
-                                  children: [
-                                    ShadInputFormField(
-                                      id: 'username',
-                                      label: const Text('Nombre de usuario'),
-                                      initialValue: user.username,
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return 'Por favor, introduce un título.';
-                                        }
-
-                                        return null;
-                                      },
-                                    ),
-                                    ShadInputFormField(
-                                      id: 'email',
-                                      label: const Text('Email'),
-                                      initialValue: user.email,
-                                      validator: (value) {
-                                        if (value.isEmpty) {
-                                          return 'Por favor, introduce una descripción.';
-                                        }
-
-                                        return null;
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        actions: [
-                          ShadButton(
-                            text: const Text('Guardar'),
-                          ),
-                          ShadButton.destructive(
-                            text: const Text("Borrar"),
-                            onPressed: () => showShadDialog(
-                              context: context,
-                              builder: (context) => ShadDialog.alert(
-                                title: const Text(
-                                  '¿Estas seguro?',
-                                  textAlign: TextAlign.left,
-                                ),
-                                description: const Padding(
-                                  padding: EdgeInsets.only(bottom: 8),
-                                  child: Text(
-                                    'Esta acción es irreversible. ¿Estás seguro de que quieres eliminar este user?',
-                                    textAlign: TextAlign.left,
-                                  ),
-                                ),
-                                actions: [
-                                  ShadButton.ghost(
-                                    text: const Text('Cancelar'),
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(false),
-                                  ),
-                                  ShadButton.destructive(
-                                    text: const Text('Eliminar'),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
                 ),
               ),
             )
