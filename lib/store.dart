@@ -10,14 +10,19 @@ class User {
   String username;
   String email;
   String token;
+  String role;
+  int? reminderDayOfWeek;
 
-  User(this.id, this.username, this.email, this.token);
+  User(this.id, this.username, this.email, this.token, this.role,
+      this.reminderDayOfWeek);
 
   User.fromJson(Map<String, dynamic> json)
       : id = json['id'],
         username = json['username'],
         email = json['email'],
-        token = json['token'];
+        token = json['token'],
+        role = json['role'],
+        reminderDayOfWeek = json['reminderDayOfWeek'];
 
   Map<String, dynamic> toJson() {
     return {
@@ -25,6 +30,8 @@ class User {
       'username': username,
       'email': email,
       'token': token,
+      'role': role,
+      'reminderDayOfWeek': reminderDayOfWeek,
     };
   }
 }

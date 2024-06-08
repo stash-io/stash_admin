@@ -144,16 +144,36 @@ class _UsersState extends State<Users> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SizedBox(height: 8),
-                        const Text(
-                          "Rol: Admin",
+                        Text(
+                          "Rol: ${user.role}",
+                          textAlign: TextAlign.left,
+                        ),
+                        SizedBox(height: 8),
+                        Text(
+                          "Reminder: ${user.reminderDayOfWeek ?? 'Ninguno'}",
                           textAlign: TextAlign.left,
                         ),
                         SizedBox(height: 8),
                         Row(
                           children: [
-                            const ShadButton.outline(
-                              text: Text('Banear'),
-                            ),
+                            if (user.role == 'banned')
+                              ShadButton.outline(
+                                text: Text('Banear'),
+                                onPressed: () async {
+                                  await usersUnban(
+                                      currentUser.value!.token, user.id);
+                                  setState(() {});
+                                },
+                              )
+                            else
+                              ShadButton.outline(
+                                text: Text('Banear'),
+                                onPressed: () async {
+                                  await usersBan(
+                                      currentUser.value!.token, user.id);
+                                  setState(() {});
+                                },
+                              ),
                             const SizedBox(width: 8),
                             ShadButton.destructive(
                               text: const Text("Borrar"),

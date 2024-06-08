@@ -38,3 +38,31 @@ Future<void> usersDelete(String token, int id) async {
     throw Exception("${response.statusCode} ${response.body}");
   }
 }
+
+Future<void> usersBan(String token, int id) async {
+  var response = await http.put(
+    Uri.parse('${config['backend_url']}/api/admin/users/$id/ban'),
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token"
+    },
+  );
+
+  if (response.statusCode != 204) {
+    throw Exception("${response.statusCode} ${response.body}");
+  }
+}
+
+Future<void> usersUnban(String token, int id) async {
+  var response = await http.put(
+    Uri.parse('${config['backend_url']}/api/admin/users/$id/unban'),
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer $token"
+    },
+  );
+
+  if (response.statusCode != 204) {
+    throw Exception("${response.statusCode} ${response.body}");
+  }
+}
