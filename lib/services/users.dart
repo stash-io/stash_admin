@@ -18,11 +18,20 @@ Future<List<User>> usersList(String token) async {
     throw Exception(message);
   }
 
-  final users = (jsonDecode(utf8.decode(response.bodyBytes)) as List<dynamic>)
-      .map((e) => User.fromJson({...e, 'token': ''}))
-      .toList();
+  print(response.body);
 
-  return users;
+  try {
+    final users = (jsonDecode(utf8.decode(response.bodyBytes)) as List<dynamic>)
+        .map((e) => User.fromJson({...e, 'token': ''}))
+        .toList();
+    return users;
+  } catch (e) {
+    print(e);
+  }
+
+  print('aaa');
+
+  return [];
 }
 
 Future<void> usersDelete(String token, int id) async {

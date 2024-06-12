@@ -22,7 +22,7 @@ class User {
         email = json['email'],
         token = json['token'],
         role = json['role'],
-        reminderDayOfWeek = json['reminderDayOfWeek'];
+        reminderDayOfWeek = int.parse(json['reminderDayOfWeek']);
 
   Map<String, dynamic> toJson() {
     return {
