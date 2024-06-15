@@ -199,10 +199,11 @@ class _UsersState extends State<Users> {
                                     ),
                                     ShadButton.destructive(
                                       text: const Text('Eliminar'),
-                                      onPressed: () {
-                                        usersDelete(
+                                      onPressed: () async {
+                                        await usersDelete(
                                             currentUser.value!.token, user.id);
                                         Navigator.of(context).pop(true);
+                                        setState(() {});
                                       },
                                     ),
                                   ],
